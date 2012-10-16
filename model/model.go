@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/bmizerany/pq"
-	"goweb/util"
+	"gooo/util"
 	"time"
 )
 

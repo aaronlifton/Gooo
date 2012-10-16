@@ -2,9 +2,9 @@ package view
 
 import (
 	_ "github.com/bmizerany/pq"
-	"goweb/conversion"
-	"goweb/model"
-	tmpl "goweb/template"
+	"gooo/conversion"
+	"gooo/model"
+	tmpl "gooo/template"
 	"html/template"
 	"net/http"
 	"time"
