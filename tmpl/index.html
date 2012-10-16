@@ -1,0 +1,17 @@
+{{define "index"}}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Go on Rails 3.2</title>
+</head>
+<body>
+{{ range .posts}}
+	<div class="post">
+		<h1>{{.Title}}</h1>
+		<p>{{.Content}}</p>
+	</div>
+{{ end }}
+</body>
+</html>
+{{ end }}
