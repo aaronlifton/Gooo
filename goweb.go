@@ -9,8 +9,6 @@ import (
 	"net/http"
 )
 
-const dbParams string = `host=ec2-54-243-239-221.compute-1.amazonaws.com user=kwcwqwdgfelhrs port=5432 password=KKKZ3FadJRB_0IC8PK32KoKpti dbname=d62335du1mgsdc sslmode=require`
-
 func main() {
 	http.HandleFunc("/", view.MakeHandler(view.HomeHandler))
 	http.HandleFunc("/getjson", view.JSONHandler)
