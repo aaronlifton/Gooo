@@ -63,6 +63,7 @@ func TestEmptyDB(db *sql.DB) {
 		_, err = db.Exec(q)
 		util.HandleErr(err)
 	}
+	defer db.Close()
 }
 
 func OpenConn() *sql.DB {
@@ -72,7 +73,6 @@ func OpenConn() *sql.DB {
 		panic(fmt.Sprintf("%s", err))
 	}
 	db.Begin()
-	//defer db.Close()
 	return db
 }
 
@@ -83,4 +83,5 @@ func InsertIntoDB(atts []interface{}) {
 	util.HandleErr(err)
 
 	_, err = stmt.Exec(atts...)
+	defer db.Close()
 }
