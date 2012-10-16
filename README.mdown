@@ -24,4 +24,3 @@ Modular architecture
   * GetStructValues
   * StructName: gets name of a []interface{} type
 * util
-  * generic error handling
