@@ -9,7 +9,9 @@ This is a modular web framework for the [Go language](http://www.golang.org).
 
 > What is a framework? framework (noun): an essential supporting structure of a building, vehicle, or object, a basic structure underlying a system, concept, or text
 
-* inspired by PHP, clean code architecture, and the beauty of the Go language and its interface type
+* Inspired by PHP, clean code architecture, and the beauty of the Go language and its interface type
+
+* Anti-Magic
 
 ## Modular architecture
 * model
