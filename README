@@ -1,0 +1,27 @@
+# Gooo
+
+This is a modular web framework for the [Go language](http://www.golang.org).
+
+
+
+## Philosophy
+> "Go on Rails (Without the Rails)"
+
+Modular architecture
+* model
+* template
+  * parses templates in "tmpl/" folder and defines how they are rendered
+* view
+  * handles routes
+  * fetches rows from database as [Model](about:blank) interfaces
+* conversion
+  * everything in Go descends from the interface type (essentially)
+  * to ease interaction with templates and databases, they must be converted
+    to and from the interface{} and []interface{} types
+  * Interface -> JSON
+  * Interface -> Struct
+  * []interface{} -> map[string]interface{}
+  * GetStructValues
+  * StructName: gets name of a []interface{} type
+* util
+  * generic error handling
