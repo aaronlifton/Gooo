@@ -35,6 +35,7 @@ This is a modular web framework for the [Go language](http://www.golang.org).
   * GetStructValues
   * StructName: gets name of a []interface{} type
 * util
+  * generic error handler `HandlerErr(err error)`
 
 ## Tell me more...
 ### Is this really a framework? Why isn't it magic?
@@ -49,7 +50,7 @@ Yes.
   * don't want to use postgresql? Use it anyway.
     * Sign up for a free Heroku Postgres dev account [here](https://postgres.heroku.com/).
     * Create a database and save the connection params for the next step.
-* define `dpParams` in `model/model.go`
+* configure the database connection variable `dpParams` in the model package (`model/model.go`)
 * `go install` iff first build
 * `go build && ./gooo`
 * [http://localhost:8080](http://localhost:8080)
@@ -60,8 +61,9 @@ Yes.
   * go get https://github.com/bmizerany/pq (pure Go postgres driver for database/sql)
   * don't want to use postgresql? Use it anyway.
     * Sign up for a free Heroku Postgres dev account [here](https://postgres.heroku.com/).
-    * Create a database and save the connection params for the next step.* define your models and db configuration ( in the model package
-* define your views in the view package
+    * Create a database and save the connection params for the next step.
+* define your model interfaces and configure the database connection in the model package (`model/model.go`)
+* define your views as request handler functions in the view package
 * write your templates in `tmpl/` ([Go text/template syntax](http://golang.org/pkg/text/template/))
 * define routes in main package gooo.go
 * `go install` iff first build
