@@ -27,6 +27,9 @@ type BaseModel struct {
 	//Name  string
 }
 
+// example model
+// note anonymous field BaseModel
+// and its json tag
 type Post struct {
 	BaseModel `json:"-"`
 	Id        int
@@ -38,17 +41,17 @@ type Post struct {
 	Modified  time.Time
 }
 
-func (p Post) ModelName() string {
+/*func (p Post) ModelName() string {
 	return introspection.InterfaceName(p)
-}
+}*/
 func (b BaseModel) ModelName() string {
-	return "test"
+	return introspection.InterfaceName(b)
 }
 
 func TestEmptyDB(db *sql.DB) {
-	testQ := `select relname from pg_class where relname = 'post' and relkind='r'`
+	q := `select relname from pg_class where relname = 'post' and relkind='r'`
 	var initialized int = 0
-	rows, err := db.Query(testQ)
+	rows, err := db.Query(q)
 	if err != nil {
 		fmt.Println("DB Query panic")
 		panic(fmt.Sprintf("%s", err))
@@ -65,7 +68,7 @@ func TestEmptyDB(db *sql.DB) {
 	rows.Close()
 
 	if initialized == 0 {
-		q := `DROP SEQUENCE IF EXISTS post_id_seq CASCADE;
+		q = `DROP SEQUENCE IF EXISTS post_id_seq CASCADE;
 	            DROP TABLE IF EXISTS post CASCADE;
 	            CREATE SEQUENCE post_id_seq;
 	            CREATE TABLE post(id INTEGER PRIMARY KEY NOT NULL DEFAULT nextval('post_id_seq'),

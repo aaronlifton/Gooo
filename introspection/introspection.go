@@ -64,11 +64,11 @@ func ConvertToMap(s interface{}) map[string]interface{} {
 
 func InterfaceName(i interface{}) string {
 	v := reflect.TypeOf(i)
-	for v.Kind() == reflect.Ptr {
-		v = v.Elem()
-	}
-	return v.Name()
+	//for v.Kind() == reflect.Ptr {
+	//	v = v.Elem()
+	//}
 	//return v.Kind().String()
+	return v.Name()
 }
 
 func FindMethod(recvType reflect.Type, funcVal *reflect.Value) *reflect.Method {
