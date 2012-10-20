@@ -1,20 +1,52 @@
 package view
 
 import (
+	"bytes"
 	"fmt"
 	"gooo/introspection"
 	"gooo/model"
-	tmpl "gooo/template"
 	"html/template"
 	"net/http"
 	"time"
 )
 
+// template config
 var (
 	templateCache          = false
 	templatePattern string = "tmpl/*.html"
 	templates       *template.Template
 )
+
+func ParseTemplateGlob(pattern string, cache bool) {
+	templateCache = cache
+	templatePattern = pattern
+	templates = template.Must(template.ParseGlob(templatePattern))
+}
+
+func RenderTemplate(w http.ResponseWriter, tmpl string, context map[string]interface{}) {
+	var err error
+	var buf bytes.Buffer
+
+	// you can disable template caching to speedup
+	// the development process. in this case we
+	// always re-parse all templates
+	if templateCache == false {
+		tmp_templates := template.Must(template.ParseGlob(templatePattern))
+		err = tmp_templates.ExecuteTemplate(&buf, tmpl, context)
+		// in production mode, use the cached template
+		// and load the template by name
+	} else {
+		err = templates.ExecuteTemplate(&buf, tmpl, context)
+	}
+	// on error serve the internal service error
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	// set the content length, type, etc.
+	w.Write(buf.Bytes())
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+}
 
 func HomeHandler(w http.ResponseWriter, r *http.Request, title string) {
 	db := model.OpenConn()
@@ -32,20 +64,11 @@ func HomeHandler(w http.ResponseWriter, r *http.Request, title string) {
 
 	_, err = stmt.Exec(atts...)
 	*/
-	//post := introspection.ConvertToJson(p)
-	/*var f interface{}
-	var b []byte
-	b, err = json.Marshal(p)
-	HandleErr(err)
-	err = json.Unmarshal(b, &f)
-	m := f.(map[string]interface{})*/
 	x := map[string]interface{}{"p1": introspection.ConvertToMap(p), "p2": introspection.ConvertToMap(p2)}
 	y := map[string]interface{}{"posts": x}
-	//util.HandleErr(err)
 	defer db.Close()
 	//defer stmt.Close()
-	//osts := p.interfaceify()
-	tmpl.RenderTemplate(w, "index", y)
+	RenderTemplate(w, "index", y)
 }
 
 ///*func viewHandler(w http.ResponseWriter, r *http.Request, title string) {

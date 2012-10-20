@@ -9,7 +9,9 @@ import (
 	"time"
 )
 
-const dbParams string = `host=ec2-XX-XXX-XXX-XXX.compute-X.amazonaws.com user=USER_NAME port=5432 password=PASS_WORD dbname=DB_NAME sslmode=require`
+//dbConfig
+//const dbParams string = `host=ec2-XX-XXX-XXX-XXX.compute-X.amazonaws.com user=USER_NAME port=5432 password=PASS_WORD dbname=DB_NAME sslmode=require`
+const dbParams string = `host=ec2-54-243-239-221.compute-1.amazonaws.com user=kwcwqwdgfelhrs port=5432 password=KKKZ3FadJRB_0IC8PK32KoKpti dbname=d62335du1mgsdc sslmode=require`
 
 var (
 	M BaseModel
@@ -37,12 +39,13 @@ type Post struct {
 	Modified  time.Time
 }
 
-//
 func (p Post) ModelName() string {
 	return introspection.InterfaceName(p)
 }
+func (b BaseModel) ModelName() string {
+	return "test"
+}
 
-//
 func TestEmptyDB(db *sql.DB) {
 	testQ := `select relname from pg_class where relname = 'post' and relkind='r'`
 	var initialized int = 0
