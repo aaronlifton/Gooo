@@ -62,12 +62,25 @@ func ConvertToMap(s interface{}) map[string]interface{} {
 	return m
 }
 
-func StructName(s interface{}) string {
-	v := reflect.TypeOf(s)
+func InterfaceName(i interface{}) string {
+	v := reflect.TypeOf(i)
 	for v.Kind() == reflect.Ptr {
 		v = v.Elem()
 	}
 	return v.Name()
+	//return v.Kind().String()
+}
+
+func FindMethod(recvType reflect.Type, funcVal *reflect.Value) *reflect.Method {
+	// It is not possible to get the name of the method from the Func.
+	// Instead, compare it to each method of the Controller.
+	for i := 0; i < recvType.NumMethod(); i++ {
+		method := recvType.Method(i)
+		if method.Func == *funcVal {
+			return &method
+		}
+	}
+	return nil
 }
 
 /*func main() {

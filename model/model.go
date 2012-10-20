@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/bmizerany/pq"
+	"gooo/conversion"
 	"gooo/util"
 	"time"
 )
@@ -14,13 +15,15 @@ var (
 	M BaseModel
 )
 
-type Model interface {
-	FindById()
-	FindAll()
+type Modeller interface {
+	FindById() int
+	FindAll() int
+	ModelName() string
 }
+
 type BaseModel struct {
-	Model
-	Name string
+	Modeller `json:"-"`
+	//Name  string
 }
 
 type Post struct {
@@ -34,6 +37,12 @@ type Post struct {
 	Modified  time.Time
 }
 
+//
+func (p Post) ModelName() string {
+	return conversion.InterfaceName(p)
+}
+
+//
 func TestEmptyDB(db *sql.DB) {
 	testQ := `select relname from pg_class where relname = 'post' and relkind='r'`
 	var initialized int = 0

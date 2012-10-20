@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "github.com/bmizerany/pq"
 	_ "gooo/conversion"
 	_ "gooo/model"
 	_ "gooo/template"

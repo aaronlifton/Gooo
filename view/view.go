@@ -1,7 +1,7 @@
 package view
 
 import (
-	_ "github.com/bmizerany/pq"
+	"fmt"
 	"gooo/conversion"
 	"gooo/model"
 	tmpl "gooo/template"
@@ -21,6 +21,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request, title string) {
 	model.TestEmptyDB(db)
 	var p model.Post = model.Post{model.M, 2, "Test", "test post please ignore", 1, true, time.Now(), time.Now()}
 	var p2 model.Post = model.Post{model.M, 2, "Test2", "another test post please ignore", 1, true, time.Now(), time.Now()}
+	fmt.Println(p.ModelName())
 	/*atts := conversion.GetStructValues(&p)
 	for z := range atts {
 		fmt.Println(atts[z])
