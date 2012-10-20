@@ -2,7 +2,7 @@ package view
 
 import (
 	"fmt"
-	"gooo/conversion"
+	"gooo/introspection"
 	"gooo/model"
 	tmpl "gooo/template"
 	"html/template"
@@ -22,7 +22,7 @@ func HomeHandler(w http.ResponseWriter, r *http.Request, title string) {
 	var p model.Post = model.Post{model.M, 2, "Test", "test post please ignore", 1, true, time.Now(), time.Now()}
 	var p2 model.Post = model.Post{model.M, 2, "Test2", "another test post please ignore", 1, true, time.Now(), time.Now()}
 	fmt.Println(p.ModelName())
-	/*atts := conversion.GetStructValues(&p)
+	/*atts := introspection.GetStructValues(&p)
 	for z := range atts {
 		fmt.Println(atts[z])
 	}*/
@@ -32,14 +32,14 @@ func HomeHandler(w http.ResponseWriter, r *http.Request, title string) {
 
 	_, err = stmt.Exec(atts...)
 	*/
-	//post := conversion.ConvertToJson(p)
+	//post := introspection.ConvertToJson(p)
 	/*var f interface{}
 	var b []byte
 	b, err = json.Marshal(p)
 	HandleErr(err)
 	err = json.Unmarshal(b, &f)
 	m := f.(map[string]interface{})*/
-	x := map[string]interface{}{"p1": conversion.ConvertToMap(p), "p2": conversion.ConvertToMap(p2)}
+	x := map[string]interface{}{"p1": introspection.ConvertToMap(p), "p2": introspection.ConvertToMap(p2)}
 	y := map[string]interface{}{"posts": x}
 	//util.HandleErr(err)
 	defer db.Close()
@@ -91,7 +91,7 @@ func MakeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.Handl
 func JSONHandler(w http.ResponseWriter, r *http.Request) {
 	var p model.Post = model.Post{model.M, 2, "Test", "test post please ignore", 1, true, time.Now(), time.Now()}
 	w.Header().Set("Content-Type", "application/json")
-	b := conversion.ConvertToJson(p)
+	b := introspection.ConvertToJson(p)
 	w.Write(b)
 	//fmt.Fprintf(w, renderJson(w, res))
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	_ "gooo/conversion"
+	_ "gooo/introspection"
 	_ "gooo/model"
 	_ "gooo/template"
 	"gooo/view"

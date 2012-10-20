@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/bmizerany/pq"
-	"gooo/conversion"
+	"gooo/introspection"
 	"gooo/util"
 	"time"
 )
@@ -39,7 +39,7 @@ type Post struct {
 
 //
 func (p Post) ModelName() string {
-	return conversion.InterfaceName(p)
+	return introspection.InterfaceName(p)
 }
 
 //
