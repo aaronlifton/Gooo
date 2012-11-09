@@ -51,13 +51,15 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, context map[string]inter
 func HomeHandler(w http.ResponseWriter, r *http.Request, title string) {
 	db := model.OpenConn()
 	model.TestEmptyDB(db)
-	var p model.Post = model.Post{model.M, 2, "Test", "test post please ignore", 1, true, time.Now(), time.Now()}
+	var p model.Post = model.Post{model.M, 2, "Hello World", "whats up yo", 1, true, time.Now(), time.Now()}
 	var p2 model.Post = model.Post{model.M, 2, "Test2", "another test post please ignore", 1, true, time.Now(), time.Now()}
 	fmt.Println(p.ModelName())
-	/*atts := introspection.GetStructValues(&p)
+	atts := introspection.GetStructValues(&p)
+
 	for z := range atts {
 		fmt.Println(atts[z])
-	}*/
+	}
+	model.InsertIntoDB(atts)
 	/*tmt, err := db.Prepare(`INSERT INTO POST (title,content,user_id,published,created,modified)
 							 values ($1,$2,$3,$4,$5,$6)`)
 	HandleErr(err)

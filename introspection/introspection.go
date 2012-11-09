@@ -45,10 +45,10 @@ func Structify(m map[string]interface{}, s interface{}) {
 func GetStructValues(m interface{}) (v []interface{}) {
 	r := reflect.Indirect(reflect.ValueOf(m))
 	v = make([]interface{}, 0)
-	for i := 1; i < r.NumField(); i++ {
-		v = append(v, r.Type().Field(i))
+	for i := 0; i < r.NumField(); i++ {
+		v = append(v, r.Field(i).Interface())
 	}
-	return v
+	return v[2:]
 }
 
 func ConvertToMap(s interface{}) map[string]interface{} {

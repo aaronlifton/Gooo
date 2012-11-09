@@ -10,7 +10,8 @@ import (
 )
 
 //dbConfig
-const dbParams string = `host=ec2-XX-XXX-XXX-XXX.compute-X.amazonaws.com user=USER_NAME port=5432 password=PASS_WORD dbname=DB_NAME sslmode=require`
+//const dbParams string = `host=ec2-XX-XXX-XXX-XXX.compute-X.amazonaws.com user=USER_NAME port=5432 password=PASS_WORD dbname=DB_NAME sslmode=require`
+const dbParams string = `host=ec2-54-243-239-221.compute-1.amazonaws.com user=kwcwqwdgfelhrs port=5432 password=KKKZ3FadJRB_0IC8PK32KoKpti dbname=d62335du1mgsdc sslmode=require`
 
 var (
 	M BaseModel
@@ -97,5 +98,8 @@ func InsertIntoDB(atts []interface{}) {
 	util.HandleErr(err)
 
 	_, err = stmt.Exec(atts...)
+	if err != nil {
+		fmt.Println(err)
+	}
 	defer db.Close()
 }
