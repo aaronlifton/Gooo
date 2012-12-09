@@ -1,6 +1,8 @@
 # Gooo
 
-This is a modular web framework for the [Go language](http://www.golang.org).
+Go lang web app example showcasing PHP style web development with Go's speed. Includes batch template processing and interaction with postgresql databases.
+
+If you like buzzwords, This is a minimal web boilerplate toolkit for the [Go language](http://www.golang.org).
 
 
 
@@ -28,11 +30,11 @@ This is a modular web framework for the [Go language](http://www.golang.org).
   * generic error handler `HandlerErr(err error)`
 
 ## Tell me more...
-### Why are you calling this a framework? It's totally a toolkit.
-Yes.
+### Why Go?
+[Gophers](http://golang.org/doc/gopher/frontpage.png)
 
 ### Is it good?
-No. Check back in a month.
+Of course, it's written in Go. Look at that [gopher](http://golang.org/doc/gopher/frontpage.png).
 
 ## Let's Gooo test the example blog app
 * resolve dependencies
