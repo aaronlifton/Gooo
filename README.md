@@ -31,10 +31,13 @@ If you like buzzwords, This is a minimal web boilerplate toolkit for the [Go lan
 
 ## Tell me more...
 ### Why Go?
-[Gophers](http://golang.org/doc/gopher/frontpage.png)
+* [Gophers](http://golang.org/doc/gopher/frontpage.png)
+* Hip
+* New
+* Unproven
 
 ### Is it good?
-Of course, it's written in Go. Look at that [gopher](http://golang.org/doc/gopher/frontpage.png).
+Are you good?
 
 ## Let's Gooo test the example blog app
 * resolve dependencies
