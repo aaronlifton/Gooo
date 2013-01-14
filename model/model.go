@@ -10,7 +10,8 @@ import (
 )
 
 //dbConfig
-const dbParams string = `host=ec2-XX-XXX-XXX-XXX.compute-X.amazonaws.com user=USER_NAME port=5432 password=PASS_WORD dbname=DB_NAME sslmode=require`
+//const dbParams string = `host=ec2-XX-XXX-XXX-XXX.compute-X.amazonaws.com user=USER_NAME port=5432 password=PASS_WORD dbname=DB_NAME sslmode=require`
+const dbParams string = `host=ec2-54-243-239-221.compute-1.amazonaws.com user=kwcwqwdgfelhrs port=5432 password=KKKZ3FadJRB_0IC8PK32KoKpti dbname=d62335du1mgsdc sslmode=require`
 
 var (
 	M BaseModel
@@ -91,14 +92,38 @@ func OpenConn() *sql.DB {
 }
 
 func InsertIntoDB(atts []interface{}) {
-	db := OpenConn()
+	//db := OpenConn()
+	db, err := sql.Open("postgres", dbParams)
+	if err != nil {
+		fmt.Println("Connection panic")
+		panic(fmt.Sprintf("%s", err))
+	}
+	db.Begin()
 	stmt, err := db.Prepare(`INSERT INTO POST (title,content,user_id,published,created,modified)
 							 values ($1,$2,$3,$4,$5,$6)`)
 	util.HandleErr(err)
 
 	_, err = stmt.Exec(atts...)
-	if err != nil {
-		fmt.Println(err)
-	}
+	util.HandleErr(err)
 	defer db.Close()
+}
+
+func GetPosts(n int) {
+	db := OpenConn()
+	rows, err := db.Query(`SELECT * FROM POST LIMIT 10`)
+	util.HandleErr(err)
+	defer db.Close()
+	rows.Next()
+	cols, _ := rows.Columns()
+	out := make([]interface{}, len(cols))
+	dest := make([]interface{}, len(cols))
+	for i, _ := range dest {
+		dest[i] = &out[i]
+	}
+	err = rows.Scan(dest...)
+
+	fmt.Sprintf("%s", dest)
+	fmt.Println(rows)
+	//fmt.Println((*valuePtrs[0].(*interface{})).(string))
+	//return rows
 }

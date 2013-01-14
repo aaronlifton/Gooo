@@ -55,55 +55,23 @@ func HomeHandler(w http.ResponseWriter, r *http.Request, title string) {
 	var p2 model.Post = model.Post{model.M, 2, "Test2", "another test post please ignore", 1, true, time.Now(), time.Now()}
 	fmt.Println(p.ModelName())
 	atts := introspection.GetStructValues(&p)
-
-	for z := range atts {
-		fmt.Println(atts[z])
-	}
 	model.InsertIntoDB(atts)
-	/*tmt, err := db.Prepare(`INSERT INTO POST (title,content,user_id,published,created,modified)
-							 values ($1,$2,$3,$4,$5,$6)`)
-	HandleErr(err)
-
-	_, err = stmt.Exec(atts...)
-	*/
-	x := map[string]interface{}{"p1": introspection.ConvertToMap(p), "p2": introspection.ConvertToMap(p2)}
-	y := map[string]interface{}{"posts": x}
+	model.GetPosts(10)
+	posts := map[string]interface{}{"p1": introspection.ConvertToMap(p), "p2": introspection.ConvertToMap(p2)}
+	ctx := map[string]interface{}{"posts": posts}
 	defer db.Close()
 	//defer stmt.Close()
-	RenderTemplate(w, "index", y)
+	RenderTemplate(w, "index", ctx)
 }
-
-///*func viewHandler(w http.ResponseWriter, r *http.Request, title string) {
-//	p := &Post{2, "Wu Tang Clan", "dude whats up lol", 1, true, time.Now(), time.Now()}
-//	/*
-//	   if err != nil {
-//	       http.Redirect(w, r, "/edit/"+title, http.StatusFound)
-//	       return
-//	   }*/
-//	pMap := p.interfaceify()
-//	renderTemplate(w, "view", pMap)
-//}
-//
-//func editHandler(w http.ResponseWriter, r *http.Request, title string) {
-//	p := &Post{2, "Wu Tang Clan", "dude whats up lol", 1, true, time.Now(), time.Now()}
-//	/*if err != nil {
-//	    p = &Post{Title: title}
-//	}*/
-//	pMap := p.interfaceify()
-//	renderTemplate(w, "edit", pMap)
-//}
-//*/
 
 func SaveHandler(w http.ResponseWriter, r *http.Request, title string) {
 	content := r.FormValue("content")
 	p := &model.Post{Title: title, Content: content, UserId: 1, Published: true, Created: time.Now(), Modified: time.Now()}
 	p.Title = "lol"
-	/*err := p.save()
-	  if err != nil {
-	      http.Error(w, err.Error(), http.StatusInternalServerError)
-	      return
-	  }*/
-	http.Redirect(w, r, "/view/"+title, http.StatusFound)
+	atts := introspection.GetStructValues(&p)
+	model.InsertIntoDB(atts)
+	ctx := map[string]interface{}{"post": introspection.ConvertToMap(p)}
+	RenderTemplate(w, "post", ctx)
 }
 
 func MakeHandler(fn func(http.ResponseWriter, *http.Request, string)) http.HandlerFunc {

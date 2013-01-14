@@ -1,5 +1,17 @@
-<h1>{{.Title}}</h1>
-
-<p>[<a href="/edit/{{.Title}}">edit</a>]</p>
-
-<div>{{printf "%s" .Body}}</div>
+{{define "post"}}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{with .post}}{{.Title}}{{end}}</title>
+</head>
+<body>
+{{ range .post}}
+  <div class="post">
+    <h1>{{.Title}}</h1>
+    <p>{{.Content}}</p>
+  </div>
+{{ end }}
+</body>
+</html>
+{{ end }}
