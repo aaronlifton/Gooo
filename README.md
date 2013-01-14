@@ -1,13 +1,15 @@
 # Gooo
 
-Go lang web app example showcasing PHP style web development with Go's speed. Includes batch template processing and interaction with postgresql databases.
+Pronunciation: */ɡoʊʊʊ/*
 
-If you like buzzwords, This is a minimal web boilerplate toolkit for the [Go language](http://www.golang.org).
-
+Go lang web app "framework" showcasing straightforward, no-magic, web development with the [Go language](http://www.golang.org). Includes batch template processing and interaction with postgresql databases, and Model-View architecture.
 
 
 ## Philosophy
 * Anti-magic
+* So simple, that it's complex.
+* So complex, that it works.
+* If it doesn't work, publish it.
 
 ## Modular architecture
 * model
