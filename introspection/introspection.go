@@ -48,7 +48,7 @@ func GetStructValues(m interface{}) (v []interface{}) {
 	for i := 0; i < r.NumField(); i++ {
 		v = append(v, r.Field(i).Interface())
 	}
-	return v[2:]
+	return v[1:]
 }
 
 func ConvertToMap(s interface{}) map[string]interface{} {

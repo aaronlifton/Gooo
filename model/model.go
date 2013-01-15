@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/bmizerany/pq"
-	"gooo/introspection"
 	"gooo/util"
 	"time"
 )
@@ -31,7 +30,6 @@ type BaseModel struct {
 // note anonymous field BaseModel
 // and its json tag
 type Post struct {
-	BaseModel `json:"-"`
 	Id        int
 	Title     string
 	Content   string //[]byte
@@ -41,16 +39,15 @@ type Post struct {
 	Modified  time.Time
 }
 
-/*func (p Post) ModelName() string {
-	return introspection.InterfaceName(p)
-}*/
-func (b BaseModel) ModelName() string {
-	return introspection.InterfaceName(b)
-}
-
-func TestEmptyDB(db *sql.DB) {
+func TestEmptyDB() bool {
+	db, err := sql.Open("postgres", dbParams)
+	if err != nil {
+		fmt.Println("Connection panic")
+		panic(fmt.Sprintf("%s", err))
+	}
+	db.Begin()
 	q := `select relname from pg_class where relname = 'post' and relkind='r'`
-	var initialized int = 0
+	var initialized bool = false
 	rows, err := db.Query(q)
 	if err != nil {
 		fmt.Println("DB Query panic")
@@ -60,24 +57,25 @@ func TestEmptyDB(db *sql.DB) {
 		var relname string
 		err = rows.Scan(&relname)
 		if len(relname) > 0 {
-			initialized++
+			initialized = true
+			break
 		}
 	}
 	err = rows.Err()
 	util.HandleErr(err)
 	rows.Close()
 
-	if initialized == 0 {
-		q = `DROP SEQUENCE IF EXISTS post_id_seq CASCADE;
-	            DROP TABLE IF EXISTS post CASCADE;
-	            CREATE SEQUENCE post_id_seq;
-	            CREATE TABLE post(id INTEGER PRIMARY KEY NOT NULL DEFAULT nextval('post_id_seq'),
+	if initialized == false {
+		fmt.Println("\033[32;1mInitializing empty DB \033[0m")
+		q = `DROP TABLE IF EXISTS post CASCADE;
+	       CREATE TABLE post(id INTEGER PRIMARY KEY NOT NULL DEFAULT nextval('post_id_seq'),
 	                title VARCHAR(32), content TEXT, user_id INTEGER,
 	                published BOOLEAN, created TIMESTAMP, modified TIMESTAMP)`
 		_, err = db.Exec(q)
 		util.HandleErr(err)
 	}
 	defer db.Close()
+	return initialized
 }
 
 func OpenConn() *sql.DB {
