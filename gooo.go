@@ -30,15 +30,11 @@ func (p * Router) ServeHTTP (w http.ResponseWriter, r * http.Request) {
           view.NewPostHandler(w,r)
           return
       case "/hello":
-          sayhelloName(w, r)
+          view.HelloHandler(w, r)
           return
     }
     http.NotFound(w, r)
     return
-}
-
-func sayhelloName (w http.ResponseWriter, r * http.Request) {
-    fmt.Fprintf(w, "Hello myroute!")
 }
 
 func main () {

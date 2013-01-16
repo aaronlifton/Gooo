@@ -2,6 +2,7 @@ package view
 
 import (
 	"bytes"
+  "fmt"
 	"gooo/introspection"
 	"gooo/model"
 	"html/template"
@@ -73,13 +74,7 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, context m) {
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	db := model.OpenConn()
 	//model.TestEmptyDB()
-
-	//var p model.Post = model.Post{0, "Hello World", "whats up yo", 1, true, time.Now(), time.Now()}
-	//var p2 model.Post = model.Post{0, "Test2", "another test post please ignore", 1, true, time.Now(), time.Now()}
-	//atts := introspection.GetStructValues(&p)
-	//model.InsertIntoDB(atts)
   latestPosts := model.GetPosts(10)
-	//posts := m{"p1": introspection.ConvertToMap(p), "p2": introspection.ConvertToMap(p2)}
 	ctx := m{"posts": latestPosts}
 	defer db.Close()
 	RenderTemplate(w, "index", ctx)
@@ -121,3 +116,8 @@ func JSONHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(b)
 	//fmt.Fprintf(w, renderJson(w, res))
 }
+
+func HelloHandler (w http.ResponseWriter, r * http.Request) {
+    fmt.Fprintf(w, "Hey, you.")
+}
+
