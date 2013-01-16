@@ -5,30 +5,14 @@ import (
 	"fmt"
 	_ "github.com/bmizerany/pq"
 	"gooo/util"
+	"strconv"
 	"time"
 )
 
 //dbConfig
 const dbParams string = `host=ec2-XX-XXX-XXX-XXX.compute-X.amazonaws.com user=USER_NAME port=5432 password=PASS_WORD dbname=DB_NAME sslmode=require`
 
-var (
-	M BaseModel
-)
-
-type Modeller interface {
-	FindById() int
-	FindAll() int
-	ModelName() string
-}
-
-type BaseModel struct {
-	Modeller `json:"-"`
-	//Name  string
-}
-
 // example model
-// note anonymous field BaseModel
-// and its json tag
 type Post struct {
 	Id        int
 	Title     string
@@ -105,22 +89,31 @@ func InsertIntoDB(atts []interface{}) {
 	defer db.Close()
 }
 
-func GetPosts(n int) {
+func GetPosts(n int) (results []interface{}) {
 	db := OpenConn()
-	rows, err := db.Query(`SELECT * FROM POST LIMIT 10`)
+	stmt, err := db.Prepare(`SELECT * from post order by created DESC LIMIT $1`)
 	util.HandleErr(err)
-	defer db.Close()
-	rows.Next()
-	cols, _ := rows.Columns()
-	out := make([]interface{}, len(cols))
-	dest := make([]interface{}, len(cols))
-	for i, _ := range dest {
-		dest[i] = &out[i]
-	}
-	err = rows.Scan(dest...)
 
-	fmt.Sprintf("%s", dest)
-	fmt.Println(rows)
-	//fmt.Println((*valuePtrs[0].(*interface{})).(string))
-	//return rows
+	var atts = make([]interface{}, 0)
+	atts = append(atts, strconv.Itoa(n))
+	rows, err := stmt.Query(atts...)
+	util.HandleErr(err)
+
+	defer db.Close()
+	//fields, err := rows.Columns()
+	util.HandleErr(err)
+
+	results = make([]interface{}, 0)
+	var f1, f4 int
+	var f2, f3 string
+	var f5 bool
+	var f6, f7 time.Time
+
+	for rows.Next() {
+		err = rows.Scan(&f1, &f2, &f3, &f4, &f5, &f6, &f7)
+		util.HandleErr(err)
+		var p = Post{f1, f2, f3, f4, f5, f6, f7}
+		results = append(results, p)
+	}
+	return results
 }

@@ -8,6 +8,8 @@ import (
 
 type e interface{}
 
+type m map[string]interface{}
+
 func mult2(f e) e {
 	switch f.(type) {
 	case int:
@@ -17,6 +19,7 @@ func mult2(f e) e {
 	}
 	return f
 }
+
 func Map(n []e, f func(e) e) []e {
 	m := make([]e, len(n))
 	for k, v := range n {
@@ -33,7 +36,7 @@ func ConvertToJson(m interface{}) []byte {
 	return b
 }
 
-func Structify(m map[string]interface{}, s interface{}) {
+func Structify(m m, s interface{}) {
 	v := reflect.Indirect(reflect.ValueOf(s))
 
 	for i := 0; i < v.NumField(); i++ {
@@ -51,8 +54,21 @@ func GetStructValues(m interface{}) (v []interface{}) {
 	return v[1:]
 }
 
-func ConvertToMap(s interface{}) map[string]interface{} {
-	m := make(map[string]interface{})
+func ConvertToMap(s interface{}) m {
+	typ := reflect.TypeOf(s)
+	// if a pointer to a struct is passed, get the type of the dereferenced object
+	if typ.Kind() == reflect.Ptr {
+		typ = typ.Elem()
+	}
+	m := make(m)
+
+	// Only structs are supported so return an empty result if the passed object
+	// isn't a struct
+	if typ.Kind() != reflect.Struct {
+		fmt.Printf("%v type can't have attributes inspected\n", typ.Kind())
+		return m
+	}
+
 	v := reflect.ValueOf(s)
 	for i := 0; i < v.NumField(); i++ {
 		key := v.Type().Field(i).Name
@@ -62,12 +78,55 @@ func ConvertToMap(s interface{}) map[string]interface{} {
 	return m
 }
 
+func Attributes(m interface{}) map[string]reflect.Type {
+	typ := reflect.TypeOf(m)
+	// if a pointer to a struct is passed, get the type of the dereferenced object
+	if typ.Kind() == reflect.Ptr {
+		typ = typ.Elem()
+	}
+
+	// create an attribute data structure as a map of types keyed by a string.
+	attrs := make(map[string]reflect.Type)
+	// Only structs are supported so return an empty result if the passed object
+	// isn't a struct
+	if typ.Kind() != reflect.Struct {
+		fmt.Printf("%v type can't have attributes inspected\n", typ.Kind())
+		return attrs
+	}
+
+	// loop through the struct's fields and set the map
+	for i := 0; i < typ.NumField(); i++ {
+		p := typ.Field(i)
+		if !p.Anonymous {
+			attrs[p.Name] = p.Type
+		}
+	}
+
+	return attrs
+}
+
+func Types(m interface{}) []reflect.Type {
+	typ := reflect.TypeOf(m)
+	// if a pointer to a struct is passed, get the type of the dereferenced object
+	if typ.Kind() == reflect.Ptr {
+		typ = typ.Elem()
+	}
+	types := make([]reflect.Type, typ.NumField())
+	if typ.Kind() != reflect.Struct {
+		fmt.Printf("%v type can't have attributes inspected\n", typ.Kind())
+		return types
+	}
+	for i := 0; i < typ.NumField(); i++ {
+		p := typ.Field(i)
+		if !p.Anonymous {
+			types = append(types, p.Type)
+		}
+	}
+	return types
+}
+
 func InterfaceName(i interface{}) string {
 	v := reflect.TypeOf(i)
-	//for v.Kind() == reflect.Ptr {
-	//	v = v.Elem()
-	//}
-	//return v.Kind().String()
 	return v.Name()
 }
 
@@ -82,16 +141,3 @@ func FindMethod(recvType reflect.Type, funcVal *reflect.Value) *reflect.Method {
 	}
 	return nil
 }
-
-/*func main() {
-	f := map[string]interface{}{"Id": 1, "Title": "Wu Tang Clan", "Content": "biography about them",
-		"UserId": 1, "Published": true, "Created": time.Now(), "Modified": time.Now()}
-	var p Post
-	Structify(f, &p)
-	fmt.Println(p.Title)
-	fmt.Println("------")
-	vals := getStructValues(&p)
-	for x := range vals {
-		fmt.Println(vals[x])
-	}
-}test*/
