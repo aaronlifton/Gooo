@@ -16,7 +16,7 @@ const dbParams string = `host=ec2-XX-XXX-XXX-XXX.compute-X.amazonaws.com user=US
 type Post struct {
 	Id        int
 	Title     string
-	Content   string //[]byte
+	Content   string
 	UserId    int
 	Published bool
 	Created   time.Time
@@ -38,7 +38,7 @@ func TestEmptyDB() bool {
 		panic(fmt.Sprintf("%s", err))
 	}
 	for rows.Next() {
-		var relname string
+    var relname string
 		err = rows.Scan(&relname)
 		if len(relname) > 0 {
 			initialized = true
@@ -50,7 +50,7 @@ func TestEmptyDB() bool {
 	rows.Close()
 
 	if initialized == false {
-		fmt.Println("\033[32;1mInitializing empty DB \033[0m")
+		fmt.Println("\033[32;1m %s\033[0m","Initializing empty DB")
 		q = `DROP TABLE IF EXISTS post CASCADE;
 	       CREATE TABLE post(id INTEGER PRIMARY KEY NOT NULL DEFAULT nextval('post_id_seq'),
 	                title VARCHAR(32), content TEXT, user_id INTEGER,
@@ -104,16 +104,18 @@ func GetPosts(n int) (results []interface{}) {
 	util.HandleErr(err)
 
 	results = make([]interface{}, 0)
-	var f1, f4 int
-	var f2, f3 string
-	var f5 bool
-	var f6, f7 time.Time
+
+	var id, userId int
+	var title string
+	var content string
+	var published bool
+	var created, modified time.Time
 
 	for rows.Next() {
-		err = rows.Scan(&f1, &f2, &f3, &f4, &f5, &f6, &f7)
+		err = rows.Scan(&id, &title, &content, &userId, &published, &created, &modified)
 		util.HandleErr(err)
-		var p = Post{f1, f2, f3, f4, f5, f6, f7}
-		results = append(results, p)
-	}
-	return results
+		var p = Post{id, title, content, userId, published, created, modified}
+			results = append(results, p)
+  }
+  return results
 }

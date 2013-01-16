@@ -12,6 +12,15 @@
 		<p>{{.Content}}</p>
 	</div>
 {{ end }}
+<form action="posts/new" method="POSTOST" accept-charset="utf-8">
+  <div>Title: <input type="text" name="title"></div>
+  <div>Content<br />
+    <textarea name="content" rows="20" cols="40"></textarea>
+  </div>
+  <div><input type="hidden" value="1" name="userId">
+  <div><input type="submit" value="Create post"></div>
+</form>
+
 </body>
 </html>
 {{ end }}

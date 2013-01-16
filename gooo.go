@@ -15,6 +15,7 @@ var (
 func main() {
 	fmt.Printf("Gooo is now serving %s\n", addr)
 	http.HandleFunc("/", view.MakeHandler(view.HomeHandler))
+  http.HandleFunc("/posts/new", view.MakeHandler(view.NewPostHandler))
 	http.HandleFunc("/test", view.MakeHandler(view.TestHandler))
 	http.HandleFunc("/getjson", view.JSONHandler)
 	http.ListenAndServe(addr, nil)

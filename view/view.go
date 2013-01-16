@@ -7,6 +7,7 @@ import (
 	"html/template"
 	"net/http"
 	"time"
+  "strconv"
 )
 
 // template config
@@ -53,8 +54,8 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	db := model.OpenConn()
 	//model.TestEmptyDB()
 
-	//var p model.Post = model.Post{2, "Hello World", "whats up yo", 1, true, time.Now(), time.Now()}
-	//var p2 model.Post = model.Post{2, "Test2", "another test post please ignore", 1, true, time.Now(), time.Now()}
+	//var p model.Post = model.Post{0, "Hello World", "whats up yo", 1, true, time.Now(), time.Now()}
+	//var p2 model.Post = model.Post{0, "Test2", "another test post please ignore", 1, true, time.Now(), time.Now()}
 	//atts := introspection.GetStructValues(&p)
 	//model.InsertIntoDB(atts)
   latestPosts := model.GetPosts(10)
@@ -64,9 +65,23 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 	RenderTemplate(w, "index", ctx)
 }
 
+func NewPostHandler(w http.ResponseWriter, r *http.Request) {
+  title := r.FormValue("title")
+  body := r.FormValue("content")
+  userId, err := strconv.Atoi(r.FormValue("userId"))
+  if err != nil {
+    userId = 0
+  }
+  published := true
+  p := model.Post{0,title, body, userId, published, time.Now(), time.Now()}
+	atts := introspection.GetStructValues(&p)
+	model.InsertIntoDB(atts)
+  http.Redirect(w, r, "/", http.StatusFound)
+}
+
 func TestHandler(w http.ResponseWriter, r *http.Request) {
-	var p model.Post = model.Post{2, "Hello World", "whats up yo", 1, true, time.Now(), time.Now()}
-	var p2 model.Post = model.Post{2, "Test2", "another test post please ignore", 1, true, time.Now(), time.Now()}
+	var p model.Post = model.Post{0, "Hello World", "whats up yo", 1, true, time.Now(), time.Now()}
+	var p2 model.Post = model.Post{0, "Test2", "another test post please ignore", 1, true, time.Now(), time.Now()}
 	//atts := introspection.GetStructValues(&p)
 	posts := m{"p1": introspection.ConvertToMap(p), "p2": introspection.ConvertToMap(p2)}
 	ctx := m{"posts": posts}
@@ -80,7 +95,7 @@ func MakeHandler(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
 }
 
 func JSONHandler(w http.ResponseWriter, r *http.Request) {
-	var p model.Post = model.Post{2, "Test", "test post please ignore", 1, true, time.Now(), time.Now()}
+	var p model.Post = model.Post{0, "Test", "test post please ignore", 1, true, time.Now(), time.Now()}
 	w.Header().Set("Content-Type", "application/json")
 	b := introspection.ConvertToJson(p)
 	w.Write(b)
