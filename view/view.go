@@ -7,7 +7,9 @@ import (
 	"html/template"
 	"net/http"
 	"time"
+  "regexp"
   "strconv"
+  "sync"
 )
 
 // template config
@@ -19,6 +21,24 @@ var (
 
 type m map[string]interface{}
 
+
+
+type Route struct {
+  explicit bool
+  h Handler
+  re *regexp.Regexp
+}
+
+type Router struct {
+  mu sync.RWMutex // lock for req involving concurrent processing
+  m map[string]Route // Routing rules
+}
+
+type Handler interface {
+  ServeHTTP(http.ResponseWriter, *http.Request)
+}
+
+//mine
 func ParseTemplateGlob(pattern string, cache bool) {
 	templateCache = cache
 	templatePattern = pattern

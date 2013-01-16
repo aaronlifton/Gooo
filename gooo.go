@@ -12,11 +12,38 @@ var (
 	addr = ":8080"
 )
 
-func main() {
-	fmt.Printf("Gooo is now serving %s\n", addr)
-	http.HandleFunc("/", view.MakeHandler(view.HomeHandler))
-  http.HandleFunc("/posts/new", view.MakeHandler(view.NewPostHandler))
-	http.HandleFunc("/test", view.MakeHandler(view.TestHandler))
-	http.HandleFunc("/getjson", view.JSONHandler)
-	http.ListenAndServe(addr, nil)
+type Router struct {
 }
+
+func (p * Router) ServeHTTP (w http.ResponseWriter, r * http.Request) {
+    switch r.URL.Path {
+      case "/":
+          view.HomeHandler(w,r)
+          return
+      case "/home":
+           http.Redirect(w, r, "/", http.StatusFound)
+           return
+      case "/test":
+          view.TestHandler(w,r)
+          return
+      case "/posts/new":
+          view.NewPostHandler(w,r)
+          return
+      case "/hello":
+          sayhelloName(w, r)
+          return
+    }
+    http.NotFound(w, r)
+    return
+}
+
+func sayhelloName (w http.ResponseWriter, r * http.Request) {
+    fmt.Fprintf(w, "Hello myroute!")
+}
+
+func main () {
+	  fmt.Printf("Gooo is now serving %s\n", addr)
+    mux := &Router{}
+    http.ListenAndServe (addr, mux)
+}
+
