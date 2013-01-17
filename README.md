@@ -8,8 +8,7 @@
  | |__| | (_) | (_) | (_) |
   \_____|\___/ \___/ \___/ 
 ```                           
-                           
-                           
+
 Pronunciation: */ɡoʊʊʊ/*
 
 Go lang web app "framework" showcasing straightforward, no-magic, web development with the [Go language](http://www.golang.org). Includes batch template processing and interaction with postgresql databases, and Model-View architecture.
@@ -97,6 +96,12 @@ Are you good?
 * [net/http](http://golang.org/pkg/net/http/)
 * [database/sql](http://golang.org/pkg/database/sql/)
 * [encoding/json](http://golang.org/pkg/encoding/json/)
+
+- - -
+
+<p align="center">
+  <img src="https://github.com/waldyr/Sublime-Installer/blob/master/sublime_text.png?raw=true" alt="Gopher"/>
+</p>
 
 
 - - -
