@@ -1,5 +1,15 @@
 # Gooo
 
+```
+   _____                   
+  / ____|                  
+ | |  __  ___   ___   ___  
+ | | |_ |/ _ \ / _ \ / _ \ 
+ | |__| | (_) | (_) | (_) |
+  \_____|\___/ \___/ \___/ 
+```                           
+                           
+                           
 Pronunciation: */ɡoʊʊʊ/*
 
 Go lang web app "framework" showcasing straightforward, no-magic, web development with the [Go language](http://www.golang.org). Includes batch template processing and interaction with postgresql databases, and Model-View architecture.
@@ -30,6 +40,14 @@ Go lang web app "framework" showcasing straightforward, no-magic, web developmen
   * InterfaceName:      `interface{} -> string`
 * util
   * generic error handler `HandlerErr(err error)`
+
+---
+
+![Martin Odersky](http://i.imgur.com/jB8aa.jpg?1)
+
+*Tested and approved by Typeunsafe&copy; Corporation*
+
+---
 
 ## Tell me more...
 ### Why Go?
@@ -79,6 +97,7 @@ Are you good?
 * [net/http](http://golang.org/pkg/net/http/)
 * [database/sql](http://golang.org/pkg/database/sql/)
 * [encoding/json](http://golang.org/pkg/encoding/json/)
+
 
 - - -
 
