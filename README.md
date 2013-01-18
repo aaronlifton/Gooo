@@ -1,13 +1,13 @@
 # Gooo
 
 ```
-   _____                   
-  / ____|                  
- | |  __  ___   ___   ___  
- | | |_ |/ _ \ / _ \ / _ \ 
+   _____
+  / ____|
+ | |  __  ___   ___   ___
+ | | |_ |/ _ \ / _ \ / _ \
  | |__| | (_) | (_) | (_) |
-  \_____|\___/ \___/ \___/ 
-```                           
+  \_____|\___/ \___/ \___/
+```
 
 Pronunciation: */ɡoʊʊʊ/*
 
@@ -23,18 +23,21 @@ Go lang web app "framework" showcasing straightforward, no-magic, web developmen
 ## Modular architecture
 * model
   * `struct` type
-  * embedded `Modeller` interface through `BaseModel` struct
+  * no special tags or fields, models are just Go structs
+  * business logic - straightforward DB methods to be used in the view module
 * view
  * parses templates in `tmpl/` folder and defines how they are rendered
   * uses [`html/template`](http://golang.org/pkg/html/template/) to parse and render
-  * handles routes
   * fetches rows from database as type Model interfaces
-* conversion
+* router
+  * handles dynamic and static routes, request methods, main handler matches the request URL against the routes
+  * middleware filters for restful routes
+* introspection
   * models implement `interface{}` and `[]interface{}` types
   * Go's dynamic feature is interface type conversion, generally checked at runtime
   * Interface -> JSON   `interface{} -> []byte`
   * Interface -> Struct `[]interface{}` -> `map[string]interface{}`
-  * 
+  *
   * GetStructValues     `interface{} -> []interface{}`
   * InterfaceName:      `interface{} -> string`
 * util
