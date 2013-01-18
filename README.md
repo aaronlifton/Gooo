@@ -23,7 +23,8 @@ Go lang web app "framework" showcasing straightforward, no-magic, web developmen
 ## Modular architecture
 * model
   * `struct` type
-  * embedded `Modeller` interface through `BaseModel` struct
+  * no special tags or fields, models are just Go structs
+  * business logic - straightforward DB methods to be used in the view module
 * view
  * parses templates in `tmpl/` folder and defines how they are rendered
   * uses [`html/template`](http://golang.org/pkg/html/template/) to parse and render
