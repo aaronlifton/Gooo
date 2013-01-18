@@ -27,9 +27,11 @@ Go lang web app "framework" showcasing straightforward, no-magic, web developmen
 * view
  * parses templates in `tmpl/` folder and defines how they are rendered
   * uses [`html/template`](http://golang.org/pkg/html/template/) to parse and render
-  * handles routes
   * fetches rows from database as type Model interfaces
-* conversion
+* router
+  * handles dynamic and static routes, request methods, main handler matches the request URL against the routes
+  * middleware filters for restful routes
+* introspection
   * models implement `interface{}` and `[]interface{}` types
   * Go's dynamic feature is interface type conversion, generally checked at runtime
   * Interface -> JSON   `interface{} -> []byte`
