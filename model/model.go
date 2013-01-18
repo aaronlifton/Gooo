@@ -38,7 +38,7 @@ func TestEmptyDB() bool {
 		panic(fmt.Sprintf("%s", err))
 	}
 	for rows.Next() {
-    var relname string
+		var relname string
 		err = rows.Scan(&relname)
 		if len(relname) > 0 {
 			initialized = true
@@ -50,7 +50,7 @@ func TestEmptyDB() bool {
 	rows.Close()
 
 	if initialized == false {
-		fmt.Println("\033[32;1m %s\033[0m","Initializing empty DB")
+		fmt.Println("\033[32;1m %s\033[0m", "Initializing empty DB")
 		q = `DROP TABLE IF EXISTS post CASCADE;
 	       CREATE TABLE post(id INTEGER PRIMARY KEY NOT NULL DEFAULT nextval('post_id_seq'),
 	                title VARCHAR(32), content TEXT, user_id INTEGER,
@@ -79,7 +79,7 @@ func InsertIntoDB(atts []interface{}) {
 		fmt.Println("Connection panic")
 		panic(fmt.Sprintf("%s", err))
 	}
-  db.Begin()
+	db.Begin()
 	stmt, err := db.Prepare(`INSERT INTO POST (title,content,user_id,published,created,modified)
 							 values ($1,$2,$3,$4,$5,$6)`)
 	util.HandleErr(err)
@@ -115,7 +115,7 @@ func GetPosts(n int) (results []interface{}) {
 		err = rows.Scan(&id, &title, &content, &userId, &published, &created, &modified)
 		util.HandleErr(err)
 		var p = Post{id, title, content, userId, published, created, modified}
-			results = append(results, p)
-  }
-  return results
+		results = append(results, p)
+	}
+	return results
 }

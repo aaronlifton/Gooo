@@ -2,15 +2,14 @@ package view
 
 import (
 	"bytes"
-  "fmt"
 	"gooo/introspection"
 	"gooo/model"
 	"html/template"
 	"net/http"
+	"regexp"
+	"strconv"
+	"sync"
 	"time"
-  "regexp"
-  "strconv"
-  "sync"
 )
 
 // template config
@@ -22,21 +21,19 @@ var (
 
 type m map[string]interface{}
 
-
-
 type Route struct {
-  explicit bool
-  h Handler
-  re *regexp.Regexp
+	explicit bool
+	h        Handler
+	re       *regexp.Regexp
 }
 
 type Router struct {
-  mu sync.RWMutex // lock for req involving concurrent processing
-  m map[string]Route // Routing rules
+	mu sync.RWMutex     // lock for req involving concurrent processing
+	m  map[string]Route // Routing rules
 }
 
 type Handler interface {
-  ServeHTTP(http.ResponseWriter, *http.Request)
+	ServeHTTP(http.ResponseWriter, *http.Request)
 }
 
 //mine
@@ -71,27 +68,27 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, context m) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 }
 
-func HomeHandler(w http.ResponseWriter, r *http.Request) {
+func PostHandler(w http.ResponseWriter, r *http.Request) {
 	db := model.OpenConn()
 	//model.TestEmptyDB()
-  latestPosts := model.GetPosts(10)
+	latestPosts := model.GetPosts(10)
 	ctx := m{"posts": latestPosts}
 	defer db.Close()
 	RenderTemplate(w, "index", ctx)
 }
 
 func NewPostHandler(w http.ResponseWriter, r *http.Request) {
-  title := r.FormValue("title")
-  body := r.FormValue("content")
-  userId, err := strconv.Atoi(r.FormValue("userId"))
-  if err != nil {
-    userId = 0
-  }
-  published := true
-  p := model.Post{0,title, body, userId, published, time.Now(), time.Now()}
+	title := r.FormValue("title")
+	body := r.FormValue("content")
+	userId, err := strconv.Atoi(r.FormValue("userId"))
+	if err != nil {
+		userId = 0
+	}
+	published := true
+	p := model.Post{0, title, body, userId, published, time.Now(), time.Now()}
 	atts := introspection.GetStructValues(&p)
 	model.InsertIntoDB(atts)
-  http.Redirect(w, r, "/", http.StatusFound)
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 func TestHandler(w http.ResponseWriter, r *http.Request) {
@@ -117,7 +114,10 @@ func JSONHandler(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprintf(w, renderJson(w, res))
 }
 
-func HelloHandler (w http.ResponseWriter, r * http.Request) {
-    fmt.Fprintf(w, "Hey, you.")
+func HelloHandler(w http.ResponseWriter, r *http.Request) {
+	params := r.URL.Query()
+	lastName := params.Get(":last")
+	firstName := params.Get(":first")
+	name := map[string]interface{}{"firstName": firstName, "lastName": lastName}
+	RenderTemplate(w, "hello", name)
 }
-
