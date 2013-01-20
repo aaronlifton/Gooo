@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Gooo by aaronlifton</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Gooo</h1>
+        <p>Go lang web app framework - straightforward, no-magic, web development</p>
+
+        <p class="view"><a href="https://github.com/aaronlifton/Gooo">View the Project on GitHub <small>aaronlifton/Gooo</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/aaronlifton/Gooo/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/aaronlifton/Gooo/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/aaronlifton/Gooo">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Gooo</h1>
+
+<pre><code>   _____
+  / ____|
+ | |  __  ___   ___   ___
+ | | |_ |/ _ \ / _ \ / _ \
+ | |__| | (_) | (_) | (_) |
+  \_____|\___/ \___/ \___/
+</code></pre>
+
+<p>Pronunciation: <em>/ɡoʊʊʊ/</em></p>
+
+<p>Go lang web app "framework" showcasing straightforward, no-magic, web development with the <a href="http://www.golang.org">Go language</a>. Includes batch template processing and interaction with postgresql databases, and Model-View architecture.</p>
+
+<h2>Philosophy</h2>
+
+<ul>
+<li>Anti-magic</li>
+<li>So simple, that it's complex.</li>
+<li>So complex, that it works.</li>
+<li>If it doesn't work, publish it.</li>
+</ul><h2>Modular architecture</h2>
+
+<ul>
+<li>model
+
+<ul>
+<li>
+<code>struct</code> type</li>
+<li>no special tags or fields, models are just Go structs</li>
+<li>business logic - straightforward DB methods to be used in the view module</li>
+</ul>
+</li>
+<li>view
+
+<ul>
+<li>parses templates in <code>tmpl/</code> folder and defines how they are rendered</li>
+<li>uses <a href="http://golang.org/pkg/html/template/"><code>html/template</code></a> to parse and render</li>
+<li>fetches rows from database as type Model interfaces</li>
+</ul>
+</li>
+<li>router
+
+<ul>
+<li>handles dynamic and static routes, request methods, main handler matches the request URL against the routes</li>
+<li>middleware filters for restful routes</li>
+</ul>
+</li>
+<li>introspection
+
+<ul>
+<li>models implement <code>interface{}</code> and <code>[]interface{}</code> types</li>
+<li>Go's dynamic feature is interface type conversion, generally checked at runtime</li>
+<li>Interface -&gt; JSON   <code>interface{} -&gt; []byte</code>
+</li>
+<li>Interface -&gt; Struct <code>[]interface{}</code> -&gt; <code>map[string]interface{}</code>
+*</li>
+<li>GetStructValues     <code>interface{} -&gt; []interface{}</code>
+</li>
+<li>InterfaceName:      <code>interface{} -&gt; string</code>
+</li>
+</ul>
+</li>
+<li>util
+
+<ul>
+<li>generic error handler <code>HandlerErr(err error)</code>
+</li>
+</ul>
+</li>
+</ul><hr><p><img src="http://i.imgur.com/jB8aa.jpg?1" alt="Martin Odersky"></p>
+
+<p><em>Tested and approved by Typeunsafe© Corporation</em></p>
+
+<hr><h2>Tell me more...</h2>
+
+<h3>Why Go?</h3>
+
+<ul>
+<li><a href="http://golang.org/doc/gopher/frontpage.png">Gophers</a></li>
+<li>Hip</li>
+<li>New</li>
+<li>Unproven</li>
+</ul><h3>Is it good?</h3>
+
+<p>Are you good?</p>
+
+<h2>Let's Gooo test the example blog app</h2>
+
+<ul>
+<li>resolve dependencies
+
+<ul>
+<li>go get <a href="https://github.com/bmizerany/pq">https://github.com/bmizerany/pq</a> (pure Go postgres driver for <code>database/sql</code>)</li>
+<li>don't want to use postgresql? Use it anyway.</li>
+<li>Sign up for a free Heroku Postgres account <a href="https://postgres.heroku.com/">here</a>.</li>
+<li>Create a database and save the connection params for the next step.</li>
+</ul>
+</li>
+<li>configure the database connection variable <code>dpParams</code> in the model package (<code>model/model.go</code>)</li>
+<li>
+<code>go install</code> iff first build</li>
+<li><code>go build &amp;&amp; ./gooo</code></li>
+<li><a href="http://localhost:8080">http://localhost:8080</a></li>
+<li>Gooo celebrate</li>
+<li>Gooo outside</li>
+</ul><h2>Let's Gooo write your own Gooo app</h2>
+
+<ul>
+<li>resolve dependencies
+
+<ul>
+<li>go get <a href="https://github.com/bmizerany/pq">https://github.com/bmizerany/pq</a> (pure Go postgres driver for <code>database/sql</code>)</li>
+<li>don't want to use postgresql? Use it anyway.</li>
+<li>Sign up for a free Heroku Postgres account <a href="https://postgres.heroku.com/">here</a>.</li>
+<li>Create a database and save the connection params for the next step.</li>
+</ul>
+</li>
+<li>define your model interfaces and configure the database connection in the model package (<code>model/model.go</code>)
+
+<ul>
+<li>implement your model interface types with anonymous <code>BaseModel</code> field</li>
+<li>use <code>`json:"-"`</code> for type safety and Go lang future proofing</li>
+<li>implement functions and variables available to all models with anonymous <code>BaseModel</code> field in the <code>Model</code> interface type</li>
+</ul>
+</li>
+<li>define your views as request handler functions in the view package (<code>view/view.go</code>)</li>
+<li>write your templates in <code>tmpl/</code> (<a href="http://golang.org/pkg/text/template/">Go text/template syntax</a>)</li>
+<li>define routes in main package gooo.go</li>
+<li>
+<code>go install</code> iff first build</li>
+<li><code>go build &amp;&amp; ./gooo</code></li>
+<li><a href="http://localhost:8080">http://localhost:8080</a></li>
+<li>Gooo celebrate</li>
+<li>Gooo outside</li>
+</ul><h2>Gooo read these</h2>
+
+<ul>
+<li><a href="http://golang.org/pkg/text/template/">text/template</a></li>
+<li><a href="http://golang.org/pkg/html/template/">html/template</a></li>
+<li><a href="http://golang.org/pkg/net/http/">net/http</a></li>
+<li><a href="http://golang.org/pkg/database/sql/">database/sql</a></li>
+<li><a href="http://golang.org/pkg/encoding/json/">encoding/json</a></li>
+</ul><hr><p align="center">
+  <img src="http://i.imgur.com/NSscm.jpg" alt="Gopher"></p>
+
+<hr><p>Enjoy,</p>
+
+<p>- Aaron Lifton</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/aaronlifton">aaronlifton</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
