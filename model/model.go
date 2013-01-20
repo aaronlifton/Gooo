@@ -42,7 +42,7 @@ func TestEmptyDB() bool {
 		err = rows.Scan(&relname)
 		if len(relname) > 0 {
 			initialized = true
-			break
+			return initialized
 		}
 	}
 	err = rows.Err()

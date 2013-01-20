@@ -3,15 +3,30 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Go on Rails 3.2</title>
+  <title>Gooo web framework</title>
 </head>
 <body>
+<h1>Welcome to Gooo</h1>
+<div style="text-align:center;">
+  <img src="assets/img/gooo_gopher.jpg"/>
+</div>
+
+<ul id="links">
+  <li><a href="hello/bob/boblaw">Hello Bob Boblaw</a></li>
+  <li><a href="posts">Posts</a></li>
+  <li><a href="test">Test Static Posts</a></li>
+</ul>
+<hr/>
+
+<h2>Posts</h2>
 {{ range .posts}}
 	<div class="post">
 		<h1>{{.Title}}</h1>
 		<p>{{.Content}}</p>
 	</div>
 {{ end }}
+
+<h2>New Post</h>
 <form action="posts" method="POST" accept-charset="utf-8">
   <div>Title: <input type="text" name="title"></div>
   <div>Content<br />

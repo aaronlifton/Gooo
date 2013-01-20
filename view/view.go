@@ -6,9 +6,7 @@ import (
 	"gooo/model"
 	"html/template"
 	"net/http"
-	"regexp"
 	"strconv"
-	"sync"
 	"time"
 )
 
@@ -21,22 +19,10 @@ var (
 
 type m map[string]interface{}
 
-type Route struct {
-	explicit bool
-	h        Handler
-	re       *regexp.Regexp
-}
-
-type Router struct {
-	mu sync.RWMutex     // lock for req involving concurrent processing
-	m  map[string]Route // Routing rules
-}
-
 type Handler interface {
 	ServeHTTP(http.ResponseWriter, *http.Request)
 }
 
-//mine
 func ParseTemplateGlob(pattern string, cache bool) {
 	templateCache = cache
 	templatePattern = pattern
@@ -47,14 +33,11 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, context m) {
 	var err error
 	var buf bytes.Buffer
 
-	// you can disable template caching to speedup
-	// the development process. in this case we
-	// always re-parse all templates
+	// you can disable template caching for speed
+	// otherwise we always re-parse the templates
 	if templateCache == false {
 		tmp_templates := template.Must(template.ParseGlob(templatePattern))
 		err = tmp_templates.ExecuteTemplate(&buf, tmpl, context)
-		// in production mode, use the cached template
-		// and load the template by name
 	} else {
 		err = templates.ExecuteTemplate(&buf, tmpl, context)
 	}
@@ -70,7 +53,8 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, context m) {
 
 func PostHandler(w http.ResponseWriter, r *http.Request) {
 	db := model.OpenConn()
-	//model.TestEmptyDB()
+  //TODO: cache this result
+  //model.TestEmptyDB()
 	latestPosts := model.GetPosts(10)
 	ctx := m{"posts": latestPosts}
 	defer db.Close()
@@ -83,6 +67,7 @@ func NewPostHandler(w http.ResponseWriter, r *http.Request) {
 	userId, err := strconv.Atoi(r.FormValue("userId"))
 	if err != nil {
 		userId = 0
+    //TODO: implement user model
 	}
 	published := true
 	p := model.Post{0, title, body, userId, published, time.Now(), time.Now()}
@@ -92,9 +77,8 @@ func NewPostHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func TestHandler(w http.ResponseWriter, r *http.Request) {
-	var p model.Post = model.Post{0, "Hello World", "whats up yo", 1, true, time.Now(), time.Now()}
-	var p2 model.Post = model.Post{0, "Test2", "another test post please ignore", 1, true, time.Now(), time.Now()}
-	//atts := introspection.GetStructValues(&p)
+	var p model.Post = model.Post{0, "Suave! Goddamn you're one suave fucker!", "You stay alive, baby. Do it for Van Gogh.", 1, true, time.Now(), time.Now()}
+	var p2 model.Post = model.Post{0, "Test Post", "Heineken? Fuck that shit! Pabst Blue Ribbon!", 1, true, time.Now(), time.Now()}
 	posts := m{"p1": introspection.ConvertToMap(p), "p2": introspection.ConvertToMap(p2)}
 	ctx := m{"posts": posts}
 	RenderTemplate(w, "index", ctx)

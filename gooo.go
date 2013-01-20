@@ -28,8 +28,10 @@ func main() {
 	r.Get("/", view.PostHandler)
 	r.Get("/posts", view.PostHandler)
 	r.Post("/posts", view.NewPostHandler)
-	//r.Static("/assets", filepath.Join(pwd, "tmpl"))
-	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(assetDir))))
+  r.Get("/hello/:first/:last", view.HelloHandler)
+  r.Get("/test", view.TestHandler)
+	
+  http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(assetDir))))
 	http.Handle("/", r)
 	http.ListenAndServe(addr, nil)
 }
