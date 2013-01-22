@@ -17,8 +17,8 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>Gooo</h1>
-        <p>Go lang web app framework - straightforward, no-magic, web development</p>
+        <h1>Gooo web framework</h1>
+        <p>Go lang web app framework<br/><em>straightforward, no-magic, web development</em></p>
         <p class="view"><a href="https://github.com/aaronlifton/Gooo">View the Project on GitHub <small>aaronlifton/Gooo</small></a></p>
         <ul>
           <li><a href="https://github.com/aaronlifton/Gooo/zipball/master">Download <strong>ZIP File</strong></a></li>
@@ -29,17 +29,11 @@
       <section>
         <h1>Gooo</h1>
 
-<pre><code>   _____
-  / ____|
- | |  __  ___   ___   ___
- | | |_ |/ _ \ / _ \ / _ \
- | |__| | (_) | (_) | (_) |
-  \_____|\___/ \___/ \___/
-</code></pre>
+<img src="images/gooo.png" alt="Go web framework">
 
 <p>Pronunciation: <em>/ɡoʊʊʊ/</em></p>
 
-<p>Go lang web app "framework" showcasing straightforward, no-magic, web development with the <a href="http://www.golang.org">Go language</a>. Includes batch template processing and interaction with postgresql databases, and Model-View architecture.</p>
+<p>Go lang web app "framework" showcasing straightforward, no-magic, web development with the <a href="http://www.golang.org">Go language</a>. Includes batch template processing, form handling, session and cookie storage,interaction with postgresql databases, and Gooo Model-View architecture.</p>
 
 <h2>Philosophy</h2>
 
@@ -146,12 +140,6 @@
 </ul>
 </li>
 <li>define your model interfaces and configure the database connection in the model package (<code>model/model.go</code>)
-
-<ul>
-<li>implement your model interface types with anonymous <code>BaseModel</code> field</li>
-<li>use <code>`json:"-"`</code> for type safety and Go lang future proofing</li>
-<li>implement functions and variables available to all models with anonymous <code>BaseModel</code> field in the <code>Model</code> interface type</li>
-</ul>
 </li>
 <li>define your views as request handler functions in the view package (<code>view/view.go</code>)</li>
 <li>write your templates in <code>tmpl/</code> (<a href="http://golang.org/pkg/text/template/">Go text/template syntax</a>)</li>
