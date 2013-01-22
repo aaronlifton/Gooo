@@ -101,4 +101,3 @@ func (manager *Manager) sessionId() string {
 	}
 	return base64.URLEncoding.EncodeToString(b)
 }
-

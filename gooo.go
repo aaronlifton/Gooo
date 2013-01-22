@@ -7,7 +7,7 @@ import (
 	"gooo/router"
 	"gooo/view"
 	"net/http"
-  "os"
+	"os"
 )
 
 var (
@@ -28,12 +28,12 @@ func main() {
 	r.Get("/", view.PostHandler)
 	r.Get("/posts", view.PostHandler)
 	r.Post("/posts", view.NewPostHandler)
-  r.Get("/hello/:first/:last", view.HelloHandler)
-  r.Get("/setcookie", view.TestCookieSetHandler)
+	r.Get("/hello/:first/:last", view.HelloHandler)
+	r.Get("/setcookie", view.TestCookieSetHandler)
 	r.Get("/getcookie", view.TestCookieGetHandler)
-  r.Get("/count", view.CountHandler)
+	r.Get("/count", view.CountHandler)
 
-  http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(assetDir))))
-  http.Handle("/", r)
+	http.Handle("/assets/", http.StripPrefix("/assets/", http.FileServer(http.Dir(assetDir))))
+	http.Handle("/", r)
 	http.ListenAndServe(addr, nil)
 }

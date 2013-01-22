@@ -27,7 +27,7 @@ const (
 
 //mime-types
 const (
-  applicationJSON = "application/json"
+	applicationJSON = "application/json"
 	applicationXML  = "applicatoin/xml"
 	textXML         = "text/xml"
 )
@@ -101,8 +101,8 @@ func (r *Router) AddRoute(method string, pattern string, handler http.HandlerFun
 	pattern = strings.Join(parts, "/")
 	regex, regexErr := regexp.Compile(pattern)
 	if regexErr != nil {
-    // TODO: avoid panic
-    panic(regexErr)
+		// TODO: avoid panic
+		panic(regexErr)
 		return
 	}
 
@@ -142,7 +142,7 @@ func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		if req.Method != route.method || !route.regex.MatchString(requestPath) {
 			continue
 		}
-		
+
 		//get param submatches
 		matches := route.regex.FindStringSubmatch(requestPath)
 
@@ -220,8 +220,8 @@ func ReadJSON(req *http.Request, v interface{}) error {
 	if err != nil {
 		return err
 	}
-  // unmarshals the JSON into the val contained in the interface val
-  // if interface val nil, stored in appropriate type interface val
+	// unmarshals the JSON into the val contained in the interface val
+	// if interface val nil, stored in appropriate type interface val
 	return json.Unmarshal(body, v)
 }
 
@@ -261,4 +261,3 @@ func ServeFormatted(w http.ResponseWriter, req *http.Request, v interface{}) {
 	}
 	return
 }
-
