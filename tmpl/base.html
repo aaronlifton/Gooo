@@ -1,0 +1,30 @@
+{{define "base"}}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>{{if .title}}{{.title}}{{else}}Gooo Web Framework v0.1{{end}}</title>
+</head>
+<body>
+<h1>Welcome to Gooo{{if .pagetitle}} - {{.pagetitle}}{{end}}</h1>
+<div style="text-align:center;">
+  <img src="/assets/img/gooo_gopher.jpg"/>
+</div>
+
+<ul id="links">
+  <li><a href="/hello/bob/boblaw">Hello Bob Boblaw</a></li>
+  <li><a href="/posts">Posts</a></li>
+</ul>
+<hr/>
+<div id="content">
+{{with .content}}
+{{template "hello" .}}
+{{end}}
+{{ if .latestPosts }}
+{{template "Posts" .latestPosts}}
+{{ end}}
+</div>
+</body>
+</html>
+{{ end }}
+

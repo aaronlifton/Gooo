@@ -1,0 +1,13 @@
+{{define "Posts"}}
+{{if .}}
+<h2>Posts</h2>
+{{ range .}}
+	<div class="post">
+		<h1>{{.Title}}</h1>
+		<p>{{.Content}}</p>
+	</div>
+{{ end }}
+{{end}}
+{{template "NewPost"}}
+{{end}}
+

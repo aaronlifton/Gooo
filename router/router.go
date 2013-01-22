@@ -12,6 +12,7 @@ import (
 	"strings"
 )
 
+// HTTP 1.1 Methods
 const (
 	CONNECT = "CONNECT"
 	DELETE  = "DELETE"
@@ -26,9 +27,9 @@ const (
 
 //mime-types
 const (
-	applicationJson = "application/json"
-	applicationXml  = "applicatoin/xml"
-	textXml         = "text/xml"
+  applicationJSON = "application/json"
+	applicationXML  = "applicatoin/xml"
+	textXML         = "text/xml"
 )
 
 type route struct {
@@ -47,6 +48,7 @@ func New() *Router {
 	return &Router{}
 }
 
+// Request-URI method implementations
 func (r *Router) Get(pattern string, handler http.HandlerFunc) {
 	r.AddRoute(GET, pattern, handler)
 }
@@ -66,6 +68,8 @@ func (r *Router) Post(pattern string, handler http.HandlerFunc) {
 	r.AddRoute(POST, pattern, handler)
 }
 
+// single static file handler
+// TODO: static dir handler
 func (r *Router) Static(pattern string, dir string) {
 	pattern = pattern + "(.+)"
 	r.AddRoute(GET, pattern, func(w http.ResponseWriter, req *http.Request) {
@@ -82,8 +86,8 @@ func (r *Router) AddRoute(method string, pattern string, handler http.HandlerFun
 	for i, part := range parts {
 		if strings.HasPrefix(part, ":") {
 			expr := "([^/]+)"
-			//a user may choose to override the defult expression
-			//eg: ‘/cats/:id([0-9]+)’
+			// a user can override the defult expression
+			// eg: ‘/cats/:id([0-9]+)’
 			if index := strings.Index(part, "("); index != -1 {
 				expr = part[index:]
 				part = part[:index]
@@ -97,7 +101,7 @@ func (r *Router) AddRoute(method string, pattern string, handler http.HandlerFun
 	pattern = strings.Join(parts, "/")
 	regex, regexErr := regexp.Compile(pattern)
 	if regexErr != nil {
-		// TODO avoid panic
+    // TODO: avoid panic
     panic(regexErr)
 		return
 	}
@@ -128,8 +132,8 @@ func (r *Router) FilterParam(param string, filter http.HandlerFunc) {
 	})
 }
 
-// Required by http.Handler interface. This method is invoked by the
-// http server and will handle all page routing
+// required by http.Handler interface
+// matches request with a route, and if found, serves the request with the route's handler
 func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	requestPath := req.URL.Path
 	w := &responseWriter{writer: rw}
@@ -139,27 +143,27 @@ func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 			continue
 		}
 		
-		//get submatches (params)
+		//get param submatches
 		matches := route.regex.FindStringSubmatch(requestPath)
 
-		//double check that the Route matches the URL pattern.
+		//check that route matches URL pattern
 		if len(matches[0]) != len(requestPath) {
 			continue
 		}
 
 		if len(route.params) > 0 {
-			//add url parameters to the query param map
+			//push URL params to query param map
 			values := req.URL.Query()
 			for i, match := range matches[1:] {
 				values.Add(route.params[i], match)
 			}
 
-			//reassemble query params and add to RawQuery
+			//concatenate query params and RawQuery
 			req.URL.RawQuery = url.Values(values).Encode() + "&" + req.URL.RawQuery
 			//req.URL.RawQuery = url.Values(values).Encode()
 		}
 
-		//execute middleware filters
+		//call each middleware filter
 		for _, filter := range r.filters {
 			filter(w, req)
 			if w.started {
@@ -170,7 +174,7 @@ func (r *Router) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		break
 	}
 
-	//no matches
+	//return http.NotFound if no route matches the request
 	if w.started == false {
 		http.NotFound(w, req)
 	}
@@ -197,32 +201,32 @@ func (w *responseWriter) WriteHeader(code int) {
 	w.writer.WriteHeader(code)
 }
 
-func ServeJson(w http.ResponseWriter, v interface{}) {
+func ServeJSON(w http.ResponseWriter, v interface{}) {
 	content, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	w.Header().Set("Content-Length", strconv.Itoa(len(content)))
-	w.Header().Set("Content-Type", applicationJson)
+	w.Header().Set("Content-Type", applicationJSON)
 	w.Write(content)
 }
 
-// ReadJson will parses the JSON-encoded data in the http
-// Request object and stores the result in the value
-// pointed to by v.
-func ReadJson(req *http.Request, v interface{}) error {
+// ReadJSON parses JSON in the http.Request pointer
+// stores the result in the value pointed to by v
+func ReadJSON(req *http.Request, v interface{}) error {
 	body, err := ioutil.ReadAll(req.Body)
 	req.Body.Close()
 	if err != nil {
 		return err
 	}
+  // unmarshals the JSON into the val contained in the interface val
+  // if interface val nil, stored in appropriate type interface val
 	return json.Unmarshal(body, v)
 }
 
-// ServeXml replies to the request with an XML
-// representation of resource v.
-func ServeXml(w http.ResponseWriter, v interface{}) {
+// ServeXML serves req with XML repr of v
+func ServeXML(w http.ResponseWriter, v interface{}) {
 	content, err := xml.Marshal(v)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -233,10 +237,9 @@ func ServeXml(w http.ResponseWriter, v interface{}) {
 	w.Write(content)
 }
 
-// ReadXml will parses the XML-encoded data in the http
-// Request object and stores the result in the value
-// pointed to by v.
-func ReadXml(req *http.Request, v interface{}) error {
+// ReadXML parses req XML
+// stores the result in the value pointed to by v
+func ReadXML(req *http.Request, v interface{}) error {
 	body, err := ioutil.ReadAll(req.Body)
 	req.Body.Close()
 	if err != nil {
@@ -245,20 +248,17 @@ func ReadXml(req *http.Request, v interface{}) error {
 	return xml.Unmarshal(body, v)
 }
 
-// ServeFormatted replies to the request with
-// a formatted representation of resource v, in the
-// format requested by the client specified in the
-// Accept header.
+// ServeFormatted parses req and serves as format specified in the Accept header
 func ServeFormatted(w http.ResponseWriter, req *http.Request, v interface{}) {
 	accept := req.Header.Get("Accept")
 	switch accept {
-	case applicationJson:
-		ServeJson(w, v)
-	case applicationXml, textXml:
-		ServeXml(w, v)
+	case applicationJSON:
+		ServeJSON(w, v)
+	case applicationXML, textXML:
+		ServeXML(w, v)
 	default:
-		ServeJson(w, v)
+		ServeJSON(w, v)
 	}
-
 	return
 }
+
