@@ -1,0 +1,13 @@
+{{ define "NewPost" }}
+
+<h2>New Post</h>
+<form action="posts" method="POST" accept-charset="utf-8">
+  <div>Title: <input type="text" name="title"></div>
+  <div>Content<br />
+    <textarea name="content" rows="20" cols="40"></textarea>
+  </div>
+  <div><input type="hidden" value="1" name="userId"></div>
+  <div><input type="submit" value="Create post"></div>
+</form>
+
+{{ end }}
