@@ -1,4 +1,4 @@
-package gooo/session
+package session
 
 import (
 	"crypto/rand"

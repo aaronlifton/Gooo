@@ -1,4 +1,4 @@
-package gooo/model
+package model
 
 import (
 	"database/sql"

@@ -1,4 +1,4 @@
-package gooo/memory
+package memory
 
 import (
 	"container/list"

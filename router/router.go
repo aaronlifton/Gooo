@@ -1,4 +1,4 @@
-package gooo/router
+package router
 
 import (
 	"encoding/json"
