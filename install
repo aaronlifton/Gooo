@@ -1,13 +1,13 @@
 #!/bin/bash
 go get github.com/bmizerany/pq
-go get github.com/aaronlifton/gooo/introspection
-go get github.com/aaronlifton/gooo/memory
-go get github.com/aaronlifton/gooo/model
-go get github.com/aaronlifton/gooo/router
-go get github.com/aaronlifton/gooo/session
-go get github.com/aaronlifton/gooo/util
-go get github.com/aaronlifton/gooo/view
-go get github.com/aaronlifton/gooo
+go get github.com/aaronlifton/Gooo/introspection
+go get github.com/aaronlifton/Gooo/memory
+go get github.com/aaronlifton/Gooo/model
+go get github.com/aaronlifton/Gooo/router
+go get github.com/aaronlifton/Gooo/session
+go get github.com/aaronlifton/Gooo/util
+go get github.com/aaronlifton/Gooo/view
+go get github.com/aaronlifton/Gooo
 go build
 perform_installation () {
   cd $GOPATH/src/github.com/aaronlifton/Gooo
