@@ -1,4 +1,4 @@
-package view
+package gooo/view
 
 import "net/http"
 

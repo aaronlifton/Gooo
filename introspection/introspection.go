@@ -1,4 +1,4 @@
-package introspection
+package gooo/introspection
 
 import (
 	"encoding/json"

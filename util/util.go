@@ -1,4 +1,4 @@
-package util
+package gooo/util
 
 import (
 	"fmt"
