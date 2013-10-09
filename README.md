@@ -64,19 +64,20 @@ Are you good?
 ## Let's Gooo test the example blog app
 * resolve dependencies and install
   * `./install`
-  * don't want to use postgresql? Use it anyway.
+  * don't want to use postgresql?
     * Sign up for a free Heroku Postgres account [here](https://postgres.heroku.com/).
     * Create a database and save the connection params for the next step.
+    * Or skip this step
 * configure the database connection variable `dbParams` in the model package (`model/model.go`)
-* `./gooo`
-* [http://localhost:8080](http://localhost:8080)
+* `./Gooo`
+* [http://localhost:8080/hello/world](http://localhost:8080/hello/world)
 * Gooo celebrate
 * Gooo outside
 
 ## Let's Gooo write your own Gooo app
 * resolve dependencies and install
   * `./install`
-  * don't want to use postgresql? Use it anyway.
+  * don't want to use postgresql?
     * Sign up for a free Heroku Postgres account [here](https://postgres.heroku.com/).
     * Create a database and save the connection params for the next step.
 * define your model interfaces and configure the database connection in the model package (`model/model.go`)
@@ -86,8 +87,8 @@ Are you good?
 * define your views as request handler functions in the view package (`view/view.go`)
 * write your templates in `tmpl/` ([Go text/template syntax](http://golang.org/pkg/text/template/))
 * define routes in main package gooo.go
-* `./gooo`
-* [http://localhost:8080](http://localhost:8080)
+* `./Gooo`
+* [http://localhost:8080/hello/world](http://localhost:8080/hello/world)
 * Gooo celebrate
 * Gooo outside
 

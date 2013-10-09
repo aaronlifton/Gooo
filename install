@@ -8,9 +8,10 @@ go get github.com/aaronlifton/Gooo/session
 go get github.com/aaronlifton/Gooo/util
 go get github.com/aaronlifton/Gooo/view
 go get github.com/aaronlifton/Gooo
-go build
+echo "Fetched packages"
 perform_installation () {
   cd $GOPATH/src/github.com/aaronlifton/Gooo
+  echo "Installing..."
   go install
 }
 perform_installation
