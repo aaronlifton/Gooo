@@ -1,0 +1,7 @@
+#!/bin/bash
+mkdir ~/gopath
+export GOPATH="$HOME/gopath"
+export GOROOT="/usr/local/go"
+export GOBIN="$GOPATH/bin"
+export PATH="$GOPATH/bin:$PATH"
+echo "ENV Configured."

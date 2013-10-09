@@ -15,6 +15,8 @@ Go lang web app "framework" showcasing straightforward, no-magic, web developmen
 
 
 ## Quick Start
+* Make sure your `GOPATH` and `GOROOT` are set.
+  * For help, run `go help gopath`
 * `./install`
 * `./run`
   * this performs the following commands:
