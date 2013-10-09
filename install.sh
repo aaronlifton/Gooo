@@ -9,4 +9,8 @@ go get github.com/aaronlifton/gooo/util
 go get github.com/aaronlifton/gooo/view
 go get github.com/aaronlifton/gooo
 go build
+relocate () {
+  cd $GOPATH/src/github.com/aaronlifton
+}
+relocate
 go install
