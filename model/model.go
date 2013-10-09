@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/bmizerany/pq"
-	"github.com/aaronlifton/Gooo/util"
+	"github.com/aaronlifton/gooo/util"
 	"strconv"
 	"time"
 )

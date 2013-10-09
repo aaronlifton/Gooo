@@ -1,11 +1,11 @@
-package main
+package gooo
 
 import (
 	"fmt"
-	_ "github.com/aaronlifton/Gooo/introspection"
-	_ "github.com/aaronlifton/Gooo/model"
-	"github.com/aaronlifton/Gooo/router"
-	"github.com/aaronlifton/Gooo/view"
+	_ "github.com/aaronlifton/gooo/introspection"
+	_ "github.com/aaronlifton/gooo/model"
+	"github.com/aaronlifton/gooo/router"
+	"github.com/aaronlifton/gooo/view"
 	"net/http"
 	"os"
 )
