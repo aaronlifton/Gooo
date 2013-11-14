@@ -4,24 +4,16 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/bmizerany/pq"
+	"github.com/aaronlifton/introspection"
 	"github.com/aaronlifton/gooo/util"
 	"strconv"
 	"time"
+	"reflect"
+	"strings"
 )
 
 //dbConfig
 const dbParams string = `host=ec2-XX-XXX-XXX-XXX.compute-X.amazonaws.com user=USER_NAME port=5432 password=PASS_WORD dbname=DB_NAME sslmode=require`
-
-// example model
-type Post struct {
-	Id        int
-	Title     string
-	Content   string
-	UserId    int
-	Published bool
-	Created   time.Time
-	Modified  time.Time
-}
 
 func TestEmptyDB() bool {
 	db, err := sql.Open("postgres", dbParams)
@@ -72,7 +64,7 @@ func OpenConn() *sql.DB {
 	return db
 }
 
-func InsertIntoDB(atts []interface{}) {
+func InsertIntoDB(mod interface{}, atts util.m, atts []interface{}) {
 	//db := OpenConn()
 	db, err := sql.Open("postgres", dbParams)
 	if err != nil {
@@ -80,6 +72,8 @@ func InsertIntoDB(atts []interface{}) {
 		panic(fmt.Sprintf("%s", err))
 	}
 	db.Begin()
+	keys = strings.Join(reflect.MapKeys(atts), ",")
+	values = strings.Join(introspection.MapValues(atts), ",")
 	stmt, err := db.Prepare(`INSERT INTO POST (title,content,user_id,published,created,modified)
 							 values ($1,$2,$3,$4,$5,$6)`)
 	util.HandleErr(err)
@@ -87,35 +81,4 @@ func InsertIntoDB(atts []interface{}) {
 	_, err = stmt.Exec(atts...)
 	util.HandleErr(err)
 	defer db.Close()
-}
-
-func GetPosts(n int) (results []interface{}) {
-	db := OpenConn()
-	stmt, err := db.Prepare(`SELECT * from post order by created DESC LIMIT $1`)
-	util.HandleErr(err)
-
-	var atts = make([]interface{}, 0)
-	atts = append(atts, strconv.Itoa(n))
-	rows, err := stmt.Query(atts...)
-	util.HandleErr(err)
-
-	defer db.Close()
-	//fields, err := rows.Columns()
-	util.HandleErr(err)
-
-	results = make([]interface{}, 0)
-
-	var id, userId int
-	var title string
-	var content string
-	var published bool
-	var created, modified time.Time
-
-	for rows.Next() {
-		err = rows.Scan(&id, &title, &content, &userId, &published, &created, &modified)
-		util.HandleErr(err)
-		var p = Post{id, title, content, userId, published, created, modified}
-		results = append(results, p)
-	}
-	return results
 }

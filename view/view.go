@@ -60,35 +60,6 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, context m) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 }
 
-func PostHandler(w http.ResponseWriter, r *http.Request) {
-	db := model.OpenConn()
-	//TODO: cache this result
-	//model.TestEmptyDB()
-	latestPosts := model.GetPosts(10)
-	ctx := m{"latestPosts": latestPosts}
-	defer db.Close()
-	//var listTmpl = template.Must(template.ParseFiles("tmpl/base.html","tmpl/index.html"))
-	//listTmpl.ExecuteTemplate(w,"index", ctx)
-	//listTmpl.ExecuteTemplate(w,"base",  nil)
-	//listTmpl.Execute(w, nil)
-	RenderTemplate(w, "base", ctx)
-}
-
-func NewPostHandler(w http.ResponseWriter, r *http.Request) {
-	title := r.FormValue("title")
-	body := r.FormValue("content")
-	userId, err := strconv.Atoi(r.FormValue("userId"))
-	if err != nil {
-		userId = 0
-		//TODO: implement user model
-	}
-	published := true
-	p := model.Post{0, title, body, userId, published, time.Now(), time.Now()}
-	atts := introspection.GetStructValues(&p)
-	model.InsertIntoDB(atts)
-	http.Redirect(w, r, "/", http.StatusFound)
-}
-
 func TestCookieSetHandler(w http.ResponseWriter, r *http.Request) {
 	//var p model.Post = model.Post{0, "Suave! Goddamn you're one suave fucker!", "You stay alive, baby. Do it for Van Gogh.", 1, true, time.Now(), time.Now()}
 	//var p2 model.Post = model.Post{0, "Test Post", "Heineken? Fuck that shit! Pabst Blue Ribbon!", 1, true, time.Now(), time.Now()}
@@ -99,6 +70,7 @@ func TestCookieSetHandler(w http.ResponseWriter, r *http.Request) {
 	ctx := m{"content": "cookie set."}
 	RenderTemplate(w, "base", ctx)
 }
+
 func TestCookieGetHandler(w http.ResponseWriter, r *http.Request) {
 	encodedVal, _ := GetSecureCookie(w, r, "user")
 	unsecureCookieVal, _ := GetCookie(w, r, "visited")
@@ -112,40 +84,11 @@ func MakeHandler(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
 	}
 }
 
-func JSONHandler(w http.ResponseWriter, r *http.Request) {
-	var p model.Post = model.Post{0, "Test", "test post please ignore", 1, true, time.Now(), time.Now()}
+func JSONHandler(m interface{}, w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	b := introspection.ConvertToJson(p)
+	b := introspection.ConvertToJson(m)
 	w.Write(b)
 	//fmt.Fprintf(w, renderJson(w, res))
-}
-
-func HelloHandler(w http.ResponseWriter, r *http.Request) {
-	params := r.URL.Query()
-	lastName := params.Get(":last")
-	firstName := params.Get(":first")
-	name := m{"content": m{"firstName": firstName, "lastName": lastName}}
-	RenderTemplate(w, "base", name)
-}
-
-func CountHandler(w http.ResponseWriter, r *http.Request) {
-	sess := globalSessions.SessionStart(w, r)
-	createtime := sess.Get("createtime")
-	if createtime == nil {
-		sess.Set("createtime", time.Now().Unix())
-	} else if (createtime.(int64) + 360) < (time.Now().Unix()) {
-		globalSessions.SessionDestroy(w, r)
-		sess = globalSessions.SessionStart(w, r)
-	}
-	ct := sess.Get("countnum")
-	if ct == nil {
-		sess.Set("countnum", 1)
-	} else {
-		sess.Set("countnum", (ct.(int) + 1))
-	}
-	t, _ := template.ParseFiles("count.html")
-	w.Header().Set("Content-Type", "text/html")
-	t.Execute(w, sess.Get("countnum"))
 }
 
 //Sets a cookie -- duration is the amount of time in seconds. 0 = forever

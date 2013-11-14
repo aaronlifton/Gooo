@@ -78,6 +78,14 @@ func ConvertToMap(s interface{}) m {
 	return m
 }
 
+func MapValues(m[string]interface{} mm) {
+	v := make([]string, 0, len(mm))
+
+	for  _, value := range mm {
+	   v = append(v, value)
+	}
+}
+
 func Attributes(m interface{}) map[string]reflect.Type {
 	typ := reflect.TypeOf(m)
 	// if a pointer to a struct is passed, get the type of the dereferenced object
