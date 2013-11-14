@@ -76,6 +76,7 @@ func InsertIntoDB(mod interface{}, atts util.m, atts []interface{}) {
 	values = strings.Join(introspection.MapValues(atts), ",")
 	stmt, err := db.Prepare(`INSERT INTO POST (title,content,user_id,published,created,modified)
 							 values ($1,$2,$3,$4,$5,$6)`)
+	
 	util.HandleErr(err)
 
 	_, err = stmt.Exec(atts...)
