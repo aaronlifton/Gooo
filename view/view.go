@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"github.com/aaronlifton/gooo/introspection"
 	_ "github.com/aaronlifton/gooo/memory"
-	"github.com/aaronlifton/gooo/model"
+	_ "github.com/aaronlifton/gooo/model"
 	"github.com/aaronlifton/gooo/session"
 	"html/template"
 	"net/http"
@@ -16,6 +16,8 @@ import (
 	"strings"
 	"time"
 )
+
+type m map[string]interface{}
 
 // template config
 var (
@@ -25,8 +27,6 @@ var (
 	CookieSecret    = "7C19QRmwf3mHZ9CPAaPQ0hsWeufKd"
 	globalSessions  *session.Manager
 )
-
-type m map[string]interface{}
 
 type Handler interface {
 	ServeHTTP(http.ResponseWriter, *http.Request)
@@ -60,35 +60,6 @@ func RenderTemplate(w http.ResponseWriter, tmpl string, context m) {
 	w.Header().Set("Content-Type", "text/html; charset=utf-8")
 }
 
-func PostHandler(w http.ResponseWriter, r *http.Request) {
-	db := model.OpenConn()
-	//TODO: cache this result
-	//model.TestEmptyDB()
-	latestPosts := model.GetPosts(10)
-	ctx := m{"latestPosts": latestPosts}
-	defer db.Close()
-	//var listTmpl = template.Must(template.ParseFiles("tmpl/base.html","tmpl/index.html"))
-	//listTmpl.ExecuteTemplate(w,"index", ctx)
-	//listTmpl.ExecuteTemplate(w,"base",  nil)
-	//listTmpl.Execute(w, nil)
-	RenderTemplate(w, "base", ctx)
-}
-
-func NewPostHandler(w http.ResponseWriter, r *http.Request) {
-	title := r.FormValue("title")
-	body := r.FormValue("content")
-	userId, err := strconv.Atoi(r.FormValue("userId"))
-	if err != nil {
-		userId = 0
-		//TODO: implement user model
-	}
-	published := true
-	p := model.Post{0, title, body, userId, published, time.Now(), time.Now()}
-	atts := introspection.GetStructValues(&p)
-	model.InsertIntoDB(atts)
-	http.Redirect(w, r, "/", http.StatusFound)
-}
-
 func TestCookieSetHandler(w http.ResponseWriter, r *http.Request) {
 	//var p model.Post = model.Post{0, "Suave! Goddamn you're one suave fucker!", "You stay alive, baby. Do it for Van Gogh.", 1, true, time.Now(), time.Now()}
 	//var p2 model.Post = model.Post{0, "Test Post", "Heineken? Fuck that shit! Pabst Blue Ribbon!", 1, true, time.Now(), time.Now()}
@@ -112,10 +83,9 @@ func MakeHandler(fn func(http.ResponseWriter, *http.Request)) http.HandlerFunc {
 	}
 }
 
-func JSONHandler(w http.ResponseWriter, r *http.Request) {
-	var p model.Post = model.Post{0, "Test", "test post please ignore", 1, true, time.Now(), time.Now()}
+func JSONHandler(m interface{}, w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
-	b := introspection.ConvertToJson(p)
+	b := introspection.ConvertToJson(m)
 	w.Write(b)
 	//fmt.Fprintf(w, renderJson(w, res))
 }
