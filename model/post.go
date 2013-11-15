@@ -1,5 +1,10 @@
 package model
 
+import(
+  "strconv"
+  "time"
+)
+
 // example model
 type Post struct {
   Id        int

@@ -4,10 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 	_ "github.com/bmizerany/pq"
-	"github.com/aaronlifton/introspection"
+	"github.com/aaronlifton/gooo/introspection"
 	"github.com/aaronlifton/gooo/util"
-	"strconv"
-	"time"
 	"reflect"
 	"strings"
 )
@@ -64,7 +62,7 @@ func OpenConn() *sql.DB {
 	return db
 }
 
-func InsertIntoDB(mod interface{}, atts util.m, atts []interface{}) {
+func InsertIntoDB(mod interface{}, atts map[string]interface{}) {
 	//db := OpenConn()
 	db, err := sql.Open("postgres", dbParams)
 	if err != nil {
@@ -72,14 +70,15 @@ func InsertIntoDB(mod interface{}, atts util.m, atts []interface{}) {
 		panic(fmt.Sprintf("%s", err))
 	}
 	db.Begin()
-	keys = strings.Join(reflect.MapKeys(atts), ",")
-	values = strings.Join(introspection.MapValues(atts), ",")
+	keys = reflect.MapKeys(atts)
+	values = introspection.MapValues(atts)
+	fkeys = strings.Join(keys, ",")
+	fvalues = strings.Join(values, ",")
 	stmt, err := db.Prepare(`INSERT INTO POST (title,content,user_id,published,created,modified)
 							 values ($1,$2,$3,$4,$5,$6)`)
-	
-	util.HandleErr(err)
 
-	_, err = stmt.Exec(atts...)
+	util.HandleErr(err)
+	_, err = stmt.Exec(values...)
 	util.HandleErr(err)
 	defer db.Close()
 }

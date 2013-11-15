@@ -25,7 +25,11 @@ func NewPostHandler(w http.ResponseWriter, r *http.Request) {
   published := true
   p := model.Post{0, title, body, userId, published, time.Now(), time.Now()}
   atts := introspection.GetStructValues(&p)
-  model.InsertIntoDB(atts)
+  v := make([]interface{}, 0, len(atts))
+  for _, val := range p {
+    v = append(v, val)
+  }
+  model.InsertIntoDB(v)
   http.Redirect(w, r, "/", http.StatusFound)
 }
 
